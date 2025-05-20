@@ -46,19 +46,22 @@ class _PostTileState extends State<PostTile> {
     });
     super.dispose();
   }
-  
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     final shortText =
-        widget.post.text.length >= 30 ? widget.post.text.substring(0, 30) : widget.post.text;
+        widget.post.text.length >= 30
+            ? widget.post.text.substring(0, 30)
+            : widget.post.text;
     return GestureDetector(
       onTap: () {
         if (!postsProvider.isDeleting) {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => PostDetails(post: widget.post)),
+            MaterialPageRoute(
+              builder: (context) => PostDetails(post: widget.post),
+            ),
           );
         }
       },
@@ -67,17 +70,24 @@ class _PostTileState extends State<PostTile> {
           motion: const DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: (ctx) => postsProvider.remove(widget.post.id),
+              onPressed: (ctx) {
+                if (!postsProvider.isDeleting) {
+                  postsProvider.remove(widget.post.id);
+                }
+              },
               icon: Icons.delete,
               backgroundColor: theme.colorScheme.error.withAlpha(220),
               label: 'Delete',
               borderRadius: BorderRadius.circular(20),
             ),
             SlidableAction(
-              onPressed:
-                  (ctx) => Navigator.of(
-                context,
-              ).pushNamed(AppRoutes.editPost, arguments: widget.post.id),
+              onPressed: (ctx) {
+                if (!postsProvider.isDeleting) {
+                  Navigator.of(
+                    context,
+                  ).pushNamed(AppRoutes.editPost, arguments: widget.post.id);
+                }
+              },
               icon: Icons.edit,
               backgroundColor: theme.colorScheme.secondary.withAlpha(220),
               label: 'Edit',
@@ -95,7 +105,10 @@ class _PostTileState extends State<PostTile> {
             child: ListTile(
               title: Text(widget.post.title),
               subtitle: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 10,
+                ),
                 child: Text(
                   "$shortText...",
                   style: TextStyle(
