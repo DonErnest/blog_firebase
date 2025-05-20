@@ -2,7 +2,7 @@
 import 'package:blog/providers/quote.dart';
 import 'package:blog/screens/not_found.dart';
 import 'package:blog/screens/post_add.dart';
-import 'package:blog/screens/quote_edit.dart';
+import 'package:blog/screens/post_edit.dart';
 import 'package:blog/screens/posts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,7 +20,7 @@ void main() async {
           routes: {
             AppRoutes.posts: (ctx) => PostsScreen(),
             AppRoutes.addPost: (ctx) => PostAddScreen(),
-            // AppRoutes.editQuote: (ctx) => QuoteEditScreen(),
+            AppRoutes.editPost: (ctx) => PostEditScreen(),
           },
           initialRoute: AppRoutes.posts,
           title: "The most useful blog of our timeline",

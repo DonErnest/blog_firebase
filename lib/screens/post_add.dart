@@ -2,7 +2,7 @@ import 'package:blog/app_routes.dart';
 import 'package:blog/providers/quote.dart';
 import 'package:blog/widget/canvas.dart';
 import 'package:blog/widget/quote_form/post_controller.dart';
-import 'package:blog/widget/quote_form/quote_form.dart';
+import 'package:blog/widget/quote_form/post_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

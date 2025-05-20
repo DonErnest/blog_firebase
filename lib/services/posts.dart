@@ -3,7 +3,7 @@ import 'package:blog/helpers/request.dart';
 import 'package:blog/models/post.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-final postsDatabaseUri = dotenv.env['BASE_QUOTES_URL'];
+final postsDatabaseUri = dotenv.env['BASE_URL'];
 
 
 Future<List<Post>> getPosts() async {
@@ -23,7 +23,7 @@ Future<List<Post>> getPosts() async {
   return posts;
 }
 
-Future<UpdatePost?> getPost(String postId) async {
+Future<Post?> getPost(String postId) async {
   final uri = '${postsDatabaseUri}posts/$postId.json';
   final response = await request(uri);
 
@@ -31,8 +31,8 @@ Future<UpdatePost?> getPost(String postId) async {
     return null;
   }
 
-  final Map<String, dynamic> postJson = {...response};
-  final postData = UpdatePost.fromJson(postJson);
+  final Map<String, dynamic> postJson = {...response, 'id': postId};
+  final postData = Post.fromJson(postJson);
   return postData;
 }
 

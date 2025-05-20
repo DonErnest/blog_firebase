@@ -5,6 +5,7 @@ import 'package:blog/widget/canvas.dart';
 import 'package:blog/widget/post_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -30,20 +31,6 @@ class _PostsScreenState extends State<PostsScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     postsProvider = context.watch<PostsProvider>();
-
-    if (postsProvider.isFetchErrors) {
-      WidgetsBinding.instance.addPostFrameCallback((duration) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Something went wrong'),
-            action: SnackBarAction(
-              label: 'Try again',
-              onPressed: () => postsProvider.fetchList(),
-            ),
-          ),
-        );
-      });
-    }
   }
 
   @override
@@ -56,9 +43,7 @@ class _PostsScreenState extends State<PostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    postsProvider = context.watch<PostsProvider>();
     final theme = Theme.of(context);
-
     Widget body;
 
     if (postsProvider.isFetching) {
@@ -74,38 +59,27 @@ class _PostsScreenState extends State<PostsScreen> {
           ),
         ],
       );
+    } else if (postsProvider.isFetchErrors) {
+      body = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Something went wrong'),
+          SizedBox(width: 8),
+          Icon(Icons.error_outline),
+          TextButton(
+            onPressed: () => postsProvider.fetchList(),
+            child: Text("Try again"),
+          ),
+        ],
+      );
     } else if (postsProvider.posts.isEmpty) {
       body = Text("No posts available");
     } else {
       body = Expanded(
         child: ListView.builder(
           itemBuilder: (ctx, idx) {
-            final quote = postsProvider.posts[idx];
-            return Slidable(
-              endActionPane: ActionPane(
-                motion: const DrawerMotion(),
-                children: [
-                  SlidableAction(
-                    onPressed: (ctx) => postsProvider.remove(quote.id),
-                    icon: Icons.delete,
-                    backgroundColor: theme.colorScheme.error.withAlpha(220),
-                    label: 'Delete',
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  SlidableAction(
-                    onPressed:
-                        (ctx) => Navigator.of(
-                          context,
-                        ).pushNamed(AppRoutes.editQuote, arguments: quote.id),
-                    icon: Icons.edit,
-                    backgroundColor: theme.colorScheme.secondary.withAlpha(220),
-                    label: 'Edit',
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ],
-              ),
-              child: QuoteTile(post: quote),
-            );
+            final post = postsProvider.posts[idx];
+            return PostTile(post: post);
           },
           itemCount: postsProvider.posts.length,
         ),

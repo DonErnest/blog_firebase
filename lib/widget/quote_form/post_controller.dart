@@ -23,7 +23,7 @@ class PostFormController {
     return newPost;
   }
 
-  UpdatePost getUpdatedQuoteData() {
+  UpdatePost getUpdatedPostData() {
     final editedQuoteData = UpdatePost(
       text: textController.text,
       title: titleController.text,
